@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Traffic Volume Estimation</title>
+  <style>
+    h1 { color: rgb(14, 36, 233); text-align: center; }
+    h2 { color: rgb(243, 5, 5); text-decoration: underline; }
+    body {
+      background: url("https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ba571810-8d27-45e4-899f-da5e38f14399.png") no-repeat center center fixed;
+      background-size: cover;
+      color: rgb(246, 7, 210);
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    label { display: block; margin-top: 10px; }
+    input, select, button { margin-top: 5px; padding: 5px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Traffic Volume Estimation</h1>
+    <h2>Please enter the following details:</h2>
+  </header>
+
+  <main>
+    <form id="trafficForm">
+      <label for="holiday">Holiday:</label>
+      <select id="holiday" name="holiday">
+        <option value="0">none</option>
+        <option value="1">Columbus Day</option>
+        <option value="1">Thanksgiving Day</option>
+        <option value="1">Christmas Day</option>
+        <option value="1">New Year's Day</option>
+        <option value="1">Memorial Day</option>
+        <option value="1">Independence Day</option>
+        <option value="1">State Fair</option>
+        <option value="1">Labor Day</option>
+        <option value="1">Martin Luther King Jr. Day</option>
+      </select>
+
+      <label for="temp">Temperature:</label>
+      <input type="number" id="temp" name="temp" placeholder="°C" required />
+
+      <label for="rain">Rain (0 or 1):</label>
+      <input type="number" id="rain" name="rain" min="0" max="1" placeholder="rain" required />
+
+      <label for="snow">Snow (0 or 1):</label>
+      <input type="number" id="snow" name="snow" min="0" max="1" placeholder="snow" required />
+
+      <label for="weather">Weather:</label>
+      <select id="weather" name="weather">
+        <option value="0">Clear</option>
+        <option value="1">Clouds</option>
+        <option value="2">Drizzle</option>
+        <option value="3">Fog</option>
+        <option value="4">Haze</option>
+        <option value="5">Mist</option>
+        <option value="6">Rain</option>
+        <option value="7">Smoke</option>
+        <option value="8">Snow</option>
+        <option value="9">Squall</option>
+        <option value="10">Thunderstorm</option>
+      </select>
+
+      <label for="year">Year:</label>
+      <input type="number" id="year" name="year" min="2012" max="2022" placeholder="year" required />
+
+      <label for="month">Month:</label>
+      <input type="number" id="month" name="month" min="1" max="12" placeholder="month" required />
+
+      <label for="day">Day:</label>
+      <input type="number" id="day" name="day" min="1" max="31" placeholder="day" required />
+
+      <label for="hours">Hours:</label>
+      <input type="number" id="hours" name="hours" min="0" max="23" placeholder="hours" required />
+
+      <label for="minutes">Minutes:</label>
+      <input type="number" id="minutes" name="minutes" min="0" max="59" placeholder="minutes" required />
+
+      <label for="seconds">Seconds:</label>
+      <input type="number" id="seconds" name="seconds" min="0" max="59" placeholder="seconds" required /><br><br/>
+
+      <button type="button" onclick=EstimateTraffic()>EstimateTraffic</button>
+    </form>
+  </main>
+
+  <script>
+    const coeffs = {
+      intercept: 1000,
+      holiday: 300,
+      temp: 5,
+      rain: -150,
+      snow: -300,
+      weather: -50,
+      hour: 20,
+      month: 10
+    };
+
+    function EstimateTraffic() {
+      const f = document.getElementById('trafficForm');
+      const holiday = parseInt(f.holiday.value, 10);
+      const temp = parseFloat(f.temp.value,10);
+      const rain = parseInt(f.rain.value, 10);
+      const snow = parseInt(f.snow.value, 10);
+      const weather = parseInt(f.weather.value, 10);
+      const hour = parseInt(f.hours.value, 10);
+      const month = parseInt(f.month.value, 10);
+
+      let estimate = coeffs.intercept
+        + coeffs.holiday * holiday
+        + coeffs.temp * temp
+        + coeffs.rain * rain
+        + coeffs.snow * snow
+        + coeffs.weather * weather
+        + coeffs.hour * hour
+        + coeffs.month * month;
+
+      estimate = Math.max(0, Math.round(estimate));
+
+      const resultPage = window.open("", "_blank");
+      resultPage.document.write(`
+        <html>
+       
+          <head><title>Traffic Volume Result</title></head>
+          <body style="font-family:sans-serif; padding:20px; background:url(https://tse1.mm.bing.net/th/id/OIP.Jhr_Gq9Vipl3zJwZcQJMLwHaEo?pid=ImgDet&w=474&h=296&rs=1&o=7&rm=3);
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover; 
+            background-attachment: fixed;">
+            <h1 style="text-align:center">Estimated Traffic Volume</h1><br></br>
+            <p style="text-align:center"><strong>${estimate}</strong>
+            <button onclick="window.close()">Close</button> </p>
+            <img src=""
+          <!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</body>
+        </html>
+      `);
+      resultPage.document.close();
+    }
+  </script>
+<!-- Code injected
